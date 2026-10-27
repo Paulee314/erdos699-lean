@@ -1,0 +1,113 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "Erdős Problem 699: every counterexample has n ≤ j²"
+  description: >-
+    Erdős Problem 699 (Erdős and Szekeres 1978) asks whether for every 1 ≤ i < j ≤ n/2 there is a
+    prime p ≥ i dividing gcd(C(n, i), C(n, j)). The problem is open. Using the statement from
+    google-deepmind/formal-conjectures with the single extra hypothesis j² < n, this project
+    proves in Lean 4 with Mathlib that the answer is yes whenever j² < n; equivalently, every
+    counterexample (n, i, j) has n ≤ j². The proof combines the Erdős–Szekeres inequality
+    gcd(C(n, i), C(n, j)) ≥ C(n, i)/C(j, i) ≥ (n/j)^i, which follows from the identity
+    C(n, j) C(j, i) = C(n, i) C(n − i, j − i), with an upper bound for a gcd whose prime factors
+    are all below i: each prime power in C(n, i) is at most n (Kummer), and there are at most i/2
+    primes below i, so such a gcd is at most n^(i/2). The bound reduces the problem to j ≥ √n.
+    With a computer search of every n < 10^12 (not part of this formalization) it rules out
+    counterexamples with j ≤ 10^6. The argument is short and may well be folklore;
+    formal-conjectures records the problem but no partial result of this kind.
+  authors:
+    - "Paul Lee"
+  license: "Apache-2.0"
+  responsible_maintainers:
+    - "Paul Lee"
+
+classification:
+  arxiv: ["math.NT"]
+  msc2020: ["11B65", "11A05"]
+
+sources:
+  - title: "Some number theoretic problems on binomial coefficients"
+    authors:
+      - "Paul Erdős"
+      - "George Szekeres"
+    type: "article"
+    location: "Austral. Math. Soc. Gaz. 5 (1978), 97–99"
+    relationship: "background"
+    note: >-
+      Origin of the problem (see also https://www.erdosproblems.com/699). The paper proves
+      gcd(C(n, i), C(n, j)) ≥ C(n, i)/C(j, i), which is the first step of the proof here
+      (choose_dvd_gcd_mul).
+  - title: "Erdős Problem 699: search to 10^12 and the bound n ≤ j²"
+    authors:
+      - "Paul Lee"
+    type: "web post"
+    location: "https://github.com/Paulee314/erdos699"
+    relationship: "formalizes"
+    note: >-
+      The README of this repository states and proves the bound n ≤ j² informally ("The lemma
+      n ≤ j²"). The repository's computations are not formalized.
+    license: "MIT"
+    author_endorsement: "participated"
+
+related_formalizations:
+  - id: "https://github.com/google-deepmind/formal-conjectures/blob/f153efa8fdc078131e214547781d631e2d257daf/FormalConjectures/ErdosProblems/699.lean"
+    relationship: "builds-on"
+    note: >-
+      The compared statement is erdos_699 from this file with the extra hypothesis j ^ 2 < n.
+
+status:
+  scope: >-
+    The compared theorem is proved in full, for all n, i, j satisfying the hypotheses. Not
+    formalized: the computer search below 10^12 and the enumeration for j ≤ 10^9 in
+    Paulee314/erdos699.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: []
+
+automation:
+  methods:
+    - method: "agent"
+      models: ["Claude Opus 5.5 (Anthropic)"]
+      framework: "Claude agent sessions (claude.ai) with a shell on the author's computer"
+      tool_setup: >-
+        AI-generated: the agent wrote all Lean code, including the statement, compiled it against
+        Lean v4.36.0-rc1 and Mathlib, and iterated on compiler errors. The author chose what to
+        formalize, directed the work, and published it.
+      cost:
+        wall_time: "under one hour of agent time in October 2026"
+        spend_usd: "subscription-based"
+        hardware: "Apple Mac Studio for the Lean builds; cloud container for drafting"
+      prompting_notes: "n/a"
+  spend_usd: "subscription-based"
+  notes: >-
+    The author is not a professional mathematician and did not write the Lean code by hand. The
+    informal argument was also produced with Claude at the author's direction.
+
+fidelity:
+  divergences: >-
+    None known. The statement is formal-conjectures' erdos_699 with one extra hypothesis,
+    j ^ 2 < n, placed after j ≤ n / 2.
+
+review:
+  status: "agent-reviewed"
+  reviewers:
+    - "Gemini 4 Argon (Google), informal argument"
+  notes: >-
+    Argon reviewed the informal argument in the README of Paulee314/erdos699 and found no error;
+    it did not review the Lean files. The Lean statement was audited against the formal-conjectures
+    statement by the formalizing agent, and the fully elaborated type of the compared theorem was
+    checked to be identical between Challenge.lean and Solution.lean (pp.all output). No human
+    expert has reviewed this work.
+
+alignment:
+  namespace: "Erdos699"
+  statements:
+    - source: "The lemma n ≤ j² in the README of Paulee314/erdos699"
+      lean: "Erdos699.erdos_699.variants.of_sq_lt"
+      module: "Solution"
+      status: "proved"
+      note: "Erdős Problem 699 holds when j² < n; equivalently every counterexample has n ≤ j²."
+
+acknowledgements: >-
+  Mathlib; google-deepmind/formal-conjectures for the statement of the problem.
